@@ -23,7 +23,7 @@ async def register_request(request):
     return json({'id': str(uuid)})
 
 
-@app.route('/register-request/<id>')
+@app.route('/request-data/<id>')
 async def request_data(request, id):
     sale = False
     if not id.isdigit():
