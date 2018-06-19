@@ -12,7 +12,7 @@ async def fetch(session, url):
 
 
 async def push(session, url):
-    async with session.get(url) as response:
+    async with session.post(url) as response:
         return await response.text()
 
 
@@ -30,7 +30,7 @@ async def subscribe():
         # Assuming we got data from data manager. Assuming average comp price is 10. 
         avg_comp_price = 10
         async with aiohttp.ClientSession() as session:
-            response = push(session, 'http://localhost:8000/register-request')
+            response = await push(session, 'http://localhost:8000/register-request')
             try:
                 # TODO: Check for http response.
                 response = json.loads(response)
@@ -42,12 +42,13 @@ async def subscribe():
                   
         async with aiohttp.ClientSession() as session:
             # As I used UUID even odd is not possible so taking dummy value 10.
-            response = fetch(session, 'http://localhost:8000/request-data/10')
+            response = await fetch(session, 'http://localhost:8000/request-data/10')
             try:
                 # TODO: Check for http response.
+                print(response)
                 response = json.loads(response)
             except:
-                print("Invalid response returned from register request api")
+                print("Invalid response returned from request data api")
             else:
                 if response.get('sale') == True:
                     print(decimal.Decimal(avg_comp_price) * decimal.Decimal(1.1))
